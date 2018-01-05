@@ -52,7 +52,20 @@ public:
 		delete[] data;
 	}
 
-	virtual bool set(int index, int value) {
+	int count() const {
+		return size;
+	}
+
+	virtual int& operator[](int index) {
+		if (index < 0 || index >= size)
+		{
+			throw std::exception("There is no array_member with such an index!\n ");
+		}
+
+		return data[index];
+	}
+
+	bool set(int index, int value) {
 
 		data[index] = value;
 		is_sorted = false;
@@ -63,8 +76,7 @@ public:
 
 		if (index < 0 || index >= size)
 		{
-			printf("Error: there is no array_member with such an index!\n ");
-			return -1;
+			throw std::exception("There is no array_member with such an index!\n ");
 		}
 
 		return data[index];
@@ -140,7 +152,7 @@ public:
 	virtual bool set(int index, int value) {
 
 		if (index < 0 || index >= size)
-			throw std::exception("Error: there is no array_member with such an index!");
+			throw std::exception("There is no array_member with such an index!");
 
 		Array::set(index, value);
 		sort();
@@ -158,6 +170,13 @@ int main()
 {
 	SortedArray b;
 	Array& a = b;
+	a.fill_random();
+
+	int n = a[9];
+	a[9] = 666;
+
+	for (int i = 0; i < a.count(); i++)
+		a[i] = i * 2;
 
 	while (true)
 	{
@@ -275,8 +294,8 @@ int main()
 			}
 
 		}
-		catch (exception) {
-			printf("\n error \n");
+		catch (const exception& e) {
+			printf("\n Error: %s \n", e.what());
 		}
 	}
 
